@@ -3,22 +3,23 @@
     const canvas = document.getElementById("canvasJuego");
     const ctx = canvas.getContext("2d");
 
-   const COLUMNAS = 20;
+    const COLUMNAS = 20;
     const FILAS = 20;
     const TAMANO_CELDA = 25;
+
+    const serpiente = [
+    { x: 0, y: 0 },   // cabeza (arriba)
+    { x: 0, y: 1 },   // cuerpo
+    { x: 0, y: 2 },   // cuerpo
+    { x: 0, y: 3 },   // cuerpo
+    { x: 0, y: 4 }    // cola (abajo)
+];
+
     
 
     // Primera pintura del juego al cargar la página
-    dibujarTodo();
-    limpiarCanvas();
-    dibujarTablero();
-    pintarParte(5, 1);
-    pintarParte(0, 0);     // esquina superior izquierda
-    pintarParte(19, 0);    // esquina superior derecha
-    pintarParte(0, 19);    // esquina inferior izquierda
-    pintarParte(19, 19);
-    pintarParte(7, 10);
-    pintarParte(14, 11);
+    dibujarTodo(); 
+
 
     // =========================
     // FUNCIONES DE DIBUJO
@@ -31,6 +32,8 @@
 
     function dibujarTodo() {
       limpiarCanvas();
+      dibujarTablero(); 
+      pintarSerpiente();
     }
 
 
@@ -68,6 +71,29 @@ function pintarParte(lineaX, lineaY) {
     ctx.strokeStyle = "#052e16";             
     ctx.strokeRect(x, y, TAMANO_CELDA, TAMANO_CELDA);
 }
+
+
+function pintarSerpiente() {
+    for (let i = 0; i < serpiente.length; i++) {
+        if (i === 0) {
+            pintarCabeza(serpiente[i].x, serpiente[i].y);
+        } else {
+            pintarParte(serpiente[i].x, serpiente[i].y);
+        }
+    }
+}
+
+function pintarCabeza(lineaX, lineaY) {
+    let x = lineaX * TAMANO_CELDA;
+    let y = lineaY * TAMANO_CELDA;
+
+    ctx.fillStyle = "#facc15";   // amarillo (cabeza)
+    ctx.fillRect(x, y, TAMANO_CELDA, TAMANO_CELDA);
+
+    ctx.strokeStyle = "#052e16";
+    ctx.strokeRect(x, y, TAMANO_CELDA, TAMANO_CELDA);
+}
+
 
 
 
