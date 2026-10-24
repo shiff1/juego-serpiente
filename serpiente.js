@@ -12,7 +12,13 @@
     dibujarTodo();
     limpiarCanvas();
     dibujarTablero();
-
+    pintarParte(5, 1);
+    pintarParte(0, 0);     // esquina superior izquierda
+    pintarParte(19, 0);    // esquina superior derecha
+    pintarParte(0, 19);    // esquina inferior izquierda
+    pintarParte(19, 19);
+    pintarParte(7, 10);
+    pintarParte(14, 11);
 
     // =========================
     // FUNCIONES DE DIBUJO
@@ -48,6 +54,21 @@
         ctx.stroke();
     }
 }
+
+function pintarParte(lineaX, lineaY) {
+    // Convertir las coordenadas de celda a píxeles
+    let x = lineaX * TAMANO_CELDA;
+    let y = lineaY * TAMANO_CELDA;
+
+   
+    ctx.fillStyle = "#22c55e";               
+    ctx.fillRect(x, y, TAMANO_CELDA, TAMANO_CELDA);  
+
+    
+    ctx.strokeStyle = "#052e16";             
+    ctx.strokeRect(x, y, TAMANO_CELDA, TAMANO_CELDA);
+}
+
 
 
 
