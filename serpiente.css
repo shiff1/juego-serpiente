@@ -69,12 +69,14 @@ h1 {
 canvas {
     width: 100%;
     max-width: 500px;
-    background: #34096d;
-    border: 2px solid #f166ac;
+    background: #ae88e0;
+    border: 2px solid #22c55e;
     border-radius: 16px;
     display: block;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;    
 }
+
+
 
 .controles {
     display: grid;
@@ -139,4 +141,29 @@ canvas {
     .acciones button {
         padding: 10px;
     }
+}
+
+.zona-canvas {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.mensaje-fin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #ef4444;
+    font-size: 42px;
+    font-weight: bold;
+    padding: 20px 40px;
+    border: 3px solid #ef4444;
+    border-radius: 16px;
+    pointer-events: none;
+}
+
+.oculto {
+    display: none;
 }

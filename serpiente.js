@@ -2,6 +2,9 @@
    // =========================
 // 1. REFERENCIAS Y CONSTANTES
 // =========================
+// =========================
+// 1. REFERENCIAS Y CONSTANTES
+// =========================
 const canvas = document.getElementById("canvasJuego");
 const ctx = canvas.getContext("2d");
 
@@ -12,17 +15,21 @@ const TAMANO_CELDA = 25;
 // =========================
 // 2. ESTADO DEL JUEGO
 // =========================
-const serpiente = [
+const POSICION_INICIAL = [
     { x: 5, y: 4 },
     { x: 4, y: 4 },
     { x: 3, y: 4 },
     { x: 2, y: 4 }
 ];
 
+const serpiente = POSICION_INICIAL.map(p => ({ x: p.x, y: p.y }));
+
 let comida = { x: 0, y: 0 };
 let direccionActual = "derecha";
 let intervaloJuego = null;
 let puntaje = 0;
+let velocidad = 200;
+let juegoTerminado = false;
 
 // =========================
 // 3. DIBUJO
@@ -112,11 +119,22 @@ function moverAbajo(crecer = false) {
 }
 
 function cambiarDireccion(direccion) {
+    if (juegoTerminado) return;
+
+    const opuestas = {
+        derecha: "izquierda",
+        izquierda: "derecha",
+        arriba: "abajo",
+        abajo: "arriba"
+    };
+
+    if (opuestas[direccion] === direccionActual) return;
+
     direccionActual = direccion;
 }
 
 // =========================
-// 5. COMIDA
+// 5. COMIDA Y CRECIMIENTO
 // =========================
 function pintarComida() {
     const columnas = canvas.width / TAMANO_CELDA;
@@ -147,14 +165,57 @@ function crecerSerpiente() {
     }
 }
 
+// =========================
+// 6. COLISIONES Y FIN DEL JUEGO
+// =========================
+function hayColisionBorde() {
+    const cabeza = serpiente[0];
+
+    return cabeza.x < 0 ||
+           cabeza.x >= COLUMNAS ||
+           cabeza.y < 0 ||
+           cabeza.y >= FILAS;
+}
+
+function hayColisionCuerpo() {
+    const cabeza = serpiente[0];
+
+    for (let i = 1; i < serpiente.length; i++) {
+        if (serpiente[i].x === cabeza.x && serpiente[i].y === cabeza.y) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function terminarJuego() {
+    juegoTerminado = true;
+    pausarJuego();
+
+    document.getElementById("mensajeFin").classList.remove("oculto");
+    document.getElementById("estado").textContent = "GAME OVER";
+}
+
+// =========================
+// 7. PUNTAJE, VELOCIDAD Y ESTADO
+// =========================
 function actualizarPuntaje() {
     document.getElementById("puntaje").textContent = puntaje;
 }
 
+function aplicarVelocidad() {
+    if (intervaloJuego !== null) {
+        clearInterval(intervaloJuego);
+        intervaloJuego = setInterval(moverSerpiente, velocidad);
+    }
+}
+
 // =========================
-// 6. CICLO DEL JUEGO
+// 8. CICLO DEL JUEGO
 // =========================
 function moverSerpiente() {
+    if (juegoTerminado) return;
+
     if (direccionActual === "derecha") {
         moverDerecha();
     } else if (direccionActual === "izquierda") {
@@ -165,49 +226,84 @@ function moverSerpiente() {
         moverAbajo();
     }
 
+    if (hayColisionBorde() || hayColisionCuerpo()) {
+        dibujarTodo();
+        terminarJuego();
+        return;
+    }
+
     if (atrapaComida()) {
         puntaje++;
         crecerSerpiente();
         pintarComida();
         actualizarPuntaje();
+
+        // cada 5 puntos acelera, sin bajar de 80 ms
+        if (puntaje % 5 === 0 && velocidad > 80) {
+            velocidad -= 20;
+            aplicarVelocidad();
+        }
     }
 
     dibujarTodo();
 }
 
 function iniciarJuego() {
-    if (intervaloJuego === null) {
+    if (intervaloJuego === null && !juegoTerminado) {
         pintarComida();
         dibujarTodo();
-        intervaloJuego = setInterval(moverSerpiente, 200);
+        document.getElementById("estado").textContent = "Jugando";
+        intervaloJuego = setInterval(moverSerpiente, velocidad);
     }
 }
 
 function pausarJuego() {
     clearInterval(intervaloJuego);
     intervaloJuego = null;
+
+    if (!juegoTerminado) {
+        document.getElementById("estado").textContent = "Pausado";
+    }
 }
 
 function reiniciarJuego() {
     pausarJuego();
 
+    limpiarCanvas();
+
     serpiente.length = 0;
-    serpiente.push(
-        { x: 5, y: 4 },
-        { x: 4, y: 4 },
-        { x: 3, y: 4 },
-        { x: 2, y: 4 }
-    );
+    POSICION_INICIAL.forEach(p => serpiente.push({ x: p.x, y: p.y }));
 
     direccionActual = "derecha";
+    juegoTerminado = false;
     puntaje = 0;
+    velocidad = 200;
+
     actualizarPuntaje();
+    document.getElementById("mensajeFin").classList.add("oculto");
+    document.getElementById("estado").textContent = "Listo";
+
     pintarComida();
     dibujarTodo();
+
+    iniciarJuego();
 }
 
 // =========================
-// 7. PRIMERA PINTURA
+// 9. TECLADO
+// =========================
+document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowUp")    cambiarDireccion("arriba");
+    if (e.key === "ArrowDown")  cambiarDireccion("abajo");
+    if (e.key === "ArrowLeft")  cambiarDireccion("izquierda");
+    if (e.key === "ArrowRight") cambiarDireccion("derecha");
+    if (e.key === " ") {
+        e.preventDefault();
+        pausarJuego();
+    }
+});
+
+// =========================
+// 10. PRIMERA PINTURA
 // =========================
 dibujarTodo();
-

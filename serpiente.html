@@ -7,46 +7,50 @@
    <link rel="stylesheet" href="serpiente.css">
 </head>
 <body>
-  <main class="contenedor-juego">
-    <h1>🐍 Juego de la Serpiente</h1>
-    <p class="descripcion">
-      Agrega una descripción creativa
-    </p>
+  <div class="contenedor-juego">
+        <h1>🐍 Juego de la Serpiente</h1>
+        <p class="descripcion">Usa los botones o las flechas del teclado para moverte.</p>
 
-    <section class="panel-info">
-      <div class="tarjeta-info">
-        <span>Puntaje</span>
-        <strong id="puntaje">0</strong>
-      </div>
-      <div class="tarjeta-info">
-        <span>Estado</span>
-        <strong id="estado">Listo</strong>
-      </div>
-    </section>
+        <!-- AQUÍ VA EL PRIMER BLOQUE -->
+        <div class="zona-canvas">
+            <canvas id="canvasJuego" width="500" height="500"></canvas>
+            <div id="mensajeFin" class="mensaje-fin oculto">GAME OVER</div>
+        </div>
 
-    <canvas id="canvasJuego" width="500" height="500"></canvas>
+        <!-- AQUÍ VA EL SEGUNDO BLOQUE -->
+        <div class="panel-info">
+            <div class="tarjeta-info">
+                <span>Puntaje</span>
+                <strong id="puntaje">0</strong>
+            </div>
+            <div class="tarjeta-info">
+                <span>Estado</span>
+                <strong id="estado">Listo</strong>
+            </div>
+        </div>
 
-    <section class="controles">
-      <button class="vacio">-</button>
-      <button onclick="cambiarDireccion('arriba')">⬆️</button>
-      <button class="vacio">-</button>
+        <!-- AQUÍ VA EL TERCER BLOQUE -->
+        <div class="acciones">
+            <button onclick="iniciarJuego()">Iniciar</button>
+            <button onclick="pausarJuego()">Pausar</button>
+            <button class="secundario" onclick="reiniciarJuego()">Reiniciar</button>
+        </div>
 
-      <button onclick="cambiarDireccion('izquierda')">⬅️</button>
-      <button onclick="pausarJuego()">⏸️</button>
-      <button onclick="cambiarDireccion('derecha')">➡️</button>
+        <div class="controles">
+            <button class="vacio"></button>
+            <button onclick="cambiarDireccion('arriba')">⬆️</button>
+            <button class="vacio"></button>
 
-      <button class="vacio">-</button>
-      <button onclick="cambiarDireccion('abajo')">⬇️</button>
-      <button class="vacio">-</button>
-    </section>
+            <button onclick="cambiarDireccion('izquierda')">⬅️</button>
+            <button onclick="pausarJuego()">⏸️</button>
+            <button onclick="cambiarDireccion('derecha')">➡️</button>
 
-    <section class="acciones">
-      <button onclick="iniciarJuego()">Iniciar</button>
-      <button class="secundario" onclick="reiniciarJuego()">Reiniciar</button>
-    </section>
+            <button class="vacio"></button>
+            <button onclick="cambiarDireccion('abajo')">⬇️</button>
+            <button class="vacio"></button>
+        </div>
+    </div>
 
-    <p id="mensaje" class="mensaje">Presiona iniciar para comenzar.</p>
-  </main>
 
   <script src="serpiente.js"></script>
 </body>
